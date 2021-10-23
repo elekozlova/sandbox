@@ -109,7 +109,7 @@ def show_map(file):
     map = folium.Map(location=arrs[0], zoom_start = 8, tiles='OpenStreetMap')
     for coordinates in arrs:
         folium.Marker( location=coordinates, icon=folium.Icon(color = 'cadetblue',icon="cloud")).add_to(map)
-        map.save("map1.html")
+        map.save("map1.html") 
     return "map1.html"
 
 
@@ -141,6 +141,9 @@ def static_response(file_name: str) -> Response:
     with file_path.open("rb") as stream:
         content = stream.read()
         return Response(content=content, media_type=media_type)
+
+
+
 
 
 
