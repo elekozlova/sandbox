@@ -5,41 +5,44 @@ from geopy import distance
 import folium
 import mimetypes
 from pathlib import Path
-from datetime import timedelta
-
-
 from fastapi import HTTPException
 from starlette import status
 from starlette.responses import Response
-
-
-
+import db_points
 
 
 def create_city(city:str):
     try:
-        if os.stat("db.json").st_size == 0:
-            with open("db.json", "w") as db_file:
+        if os.path.exists("db.json") is False:
+            with open("db.json", "w", encoding='utf-8') as db_file:
                 json.dump([], db_file)
-            with open("db.json", "r") as db_file:
+            with open("db.json", "r", encoding='utf-8') as db_file:
                 db = json.load(db_file)
             db.append(city)
-            with open("db.json", "w") as db_file:
+            with open("db.json", "w", encoding='utf-8') as db_file:
+                json.dump(db, db_file)
+        elif os.stat("db.json").st_size == 0:
+            with open("db.json", "w", encoding='utf-8') as db_file:
+                json.dump([], db_file)
+            with open("db.json", "r", encoding='utf-8') as db_file:
+                db = json.load(db_file)
+            db.append(city)
+            with open("db.json", "w", encoding='utf-8') as db_file:
                 json.dump(db, db_file)
         else:
-            with open("db.json", "r") as db_file:
+            with open("db.json", "r", encoding='utf-8') as db_file:
                 db = json.load(db_file)
             db.append(city)
-            with open("db.json", "w") as db_file:
+            with open("db.json", "w", encoding='utf-8') as db_file:
                 json.dump(db, db_file)
     finally:
         print("it is ok")
 
 
 def geolocator(*args):
-    geolocator = Nominatim(user_agent='API_KEY', timeout=10)
-    r = geolocator.geocode(*args)
-    return r.latitude, r.longitude
+    geolocator = Nominatim(user_agent='API_KEY', timeout=None)
+    result = geolocator.geocode(*args)
+    return result.latitude, result.longitude
 
 
 def read_file(file):
@@ -52,8 +55,13 @@ def get_latlongs(file):
     db = read_file(file)
     result = []
     for item in db:
-        a = geolocator(item)
-        result.append(a)
+        if db_points.city_exists(item) is True:
+            a = db_points.get_coords(item)
+            result.append(a)
+        else:
+            a = geolocator(item)
+            db_points.save_point(item, *a)
+            result.append(a)
     return result
 
 
@@ -69,6 +77,7 @@ def get_all_distance(file):
     result = [get_distance_2_points(*pair) for pair in zip(arrs[1:], arrs)]
     return result
 
+
 def get_pair(file):
     cities = read_file(file)
     new_list = []
@@ -80,27 +89,24 @@ def get_pair(file):
 
 def get_distance_time(file):
     speed = 70
-    с = read_file(file)
+    list_city = read_file(file)
     cities = get_pair(file)
     distance_km = get_all_distance(file)
     time_lst = []
     for part in distance_km:
         time = round(part / speed)
         time_lst.append(time)
-    new_time_list = []
-    for i in time_lst:
-        a = str(timedelta(hours=i))
-        new_time_list.append(a)
-    all = [cities, distance_km, new_time_list]
-    result = list(map(list, zip(*all)))
+    info = [cities, distance_km, time_lst]
+    info_common = [list_city, sum(distance_km), sum(time_lst)]
+    responce = list(map(list, zip(*info)))
+    responce_common = info_common + responce
     if len(distance_km) == 1:
-        return result
+        return responce
     else:
-        return f'{result}, {с} -  {sum(distance_km)}, {str(timedelta(hours=sum(time_lst)))}'
+        return responce_common
 
 
-
-def clear_file(file):
+def clear_file(file) -> None:
     open(file, "w").close()
 
 
@@ -108,10 +114,9 @@ def show_map(file):
     arrs = get_latlongs(file)
     map = folium.Map(location=arrs[0], zoom_start = 8, tiles='OpenStreetMap')
     for coordinates in arrs:
-        folium.Marker( location=coordinates, icon=folium.Icon(color = 'cadetblue',icon="cloud")).add_to(map)
+        folium.Marker( location=coordinates, icon=folium.Icon(icon="map-pin", prefix='fa')).add_to(map)
         map.save("map1.html") 
     return "map1.html"
-
 
 
 def apply_cache_headers(response: Response) -> None:
@@ -141,27 +146,3 @@ def static_response(file_name: str) -> Response:
     with file_path.open("rb") as stream:
         content = stream.read()
         return Response(content=content, media_type=media_type)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

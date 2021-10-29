@@ -3,6 +3,8 @@ uvicorn
 httpx
 geopy
 folium
+psycopg2
+python-dotenv
 
 
 
