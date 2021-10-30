@@ -124,11 +124,11 @@ def show_map(file):
     arrs = get_latlongs(file)
     map = folium.Map(location=arrs[0], zoom_start = 8, tiles='OpenStreetMap')
     for coordinates in arrs:
-        folium.Marker( location=coordinates, tooltip="Click here for more", icon=folium.Icon(icon="map-pin", prefix='fa')).add_to(map)
+        folium.Marker(location=coordinates, tooltip="Click here for more", icon=folium.Icon(icon="map-pin", prefix='fa')).add_to(map)
 
     pair_location = get_pair_location(file)
     for pair in pair_location:
-        line = folium.PolyLine(locations=pair_location, weight=1, color='blue')
+        line = folium.PolyLine(locations=pair, weight=1, color='blue')
         map.add_child(line)
         map.save("map1.html")
 
@@ -164,6 +164,4 @@ def static_response(file_name: str) -> Response:
     with file_path.open("rb") as stream:
         content = stream.read()
         return Response(content=content, media_type=media_type)
-
-
 
