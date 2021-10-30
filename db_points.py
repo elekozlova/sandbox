@@ -15,9 +15,8 @@ dbname = url.path[1:]
 host = url.hostname
 password = url.password
 user = url.username
-#port = url.port
 dsn = f"{user=} {password=} {host=} {dbname=}"
-print (dsn)
+
 
 
 
@@ -76,6 +75,7 @@ def save_point(city: str, lat: int, lon: int) -> None:
 def create_tables() -> None:
     sql = """
         CREATE TABLE IF NOT EXISTS points(
+            id INTEGER NOT NULL UNIQUE,
             address TEXT NOT NULL UNIQUE,
             lat FLOAT NOT NULL DEFAULT 0, 
             lon FLOAT NOT NULL DEFAULT 0

@@ -98,25 +98,43 @@ def get_distance_time(file):
         time_lst.append(time)
     info = [cities, distance_km, time_lst]
     info_common = [list_city, sum(distance_km), sum(time_lst)]
-    responce = list(map(list, zip(*info)))
-    responce_common = info_common + responce
+    response = list(map(list, zip(*info)))
+    response_common = info_common + response
     if len(distance_km) == 1:
-        return responce
+        return response
     else:
-        return responce_common
+        return response_common
 
 
 def clear_file(file) -> None:
     open(file, "w").close()
 
 
+def get_pair_location(file):
+    arrs = get_latlongs(file)
+    new_list = []
+    for p, c in zip(arrs, arrs[1:]):
+        r = p, c
+        new_list.append(r)
+    return new_list
+
+
+
 def show_map(file):
     arrs = get_latlongs(file)
     map = folium.Map(location=arrs[0], zoom_start = 8, tiles='OpenStreetMap')
     for coordinates in arrs:
-        folium.Marker( location=coordinates, icon=folium.Icon(icon="map-pin", prefix='fa')).add_to(map)
-        map.save("map1.html") 
+        folium.Marker( location=coordinates, tooltip="Click here for more", icon=folium.Icon(icon="map-pin", prefix='fa')).add_to(map)
+
+    pair_location = get_pair_location(file)
+    for pair in pair_location:
+        line = folium.PolyLine(locations=pair_location, weight=1, color='blue')
+        map.add_child(line)
+        map.save("map1.html")
+
     return "map1.html"
+
+
 
 
 def apply_cache_headers(response: Response) -> None:
@@ -146,3 +164,6 @@ def static_response(file_name: str) -> Response:
     with file_path.open("rb") as stream:
         content = stream.read()
         return Response(content=content, media_type=media_type)
+
+
+
