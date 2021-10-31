@@ -1,0 +1,43 @@
+body {
+  font-family: sans-serif;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 80px;
+  padding: 25px;
+  width: 400px;
+  background: #ffeeee;
+}
+
+.description {
+font-size: 16px;
+margin-bottom: 20px;
+}
+
+.point-block {
+  margin-bottom: 20px;
+}
+
+.point-block label {
+  display: block;
+}
+
+button {
+  max-width: 200px;
+  min-height: 40px;
+  color: #fff;
+  background: #7d2717;
+  padding: 15px;
+  margin: 15px 0;
+}
+
+#result {
+  display: block;
+  padding: 10px 4px;
+  margin-top: 20px;
+  font-size: 18px;
+  border: 1px solid #7d2717;
+}}
