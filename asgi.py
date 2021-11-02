@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Body, Response
-from util import create_city, clear_file, show_map, get_distance_time
-from util import apply_cache_headers, static_response
+from util import create_city,  get_distance_time
+from db import clear
+from static import apply_cache_headers, static_response
 
 
 app = FastAPI()
@@ -34,17 +35,17 @@ async def _(city:str = Body(...)):
 
 @app.get("/result")
 async def _():
-    distance = get_distance_time("db.json")
-    return distance
+    result = get_distance_time()
+    return result
 
 
 @app.delete("/del")
 async def _():
-    clear_file("db.json")
+    clear()
     return {"message": "file delete"}
 
 
-@app.get("/map")
-async def _():
-    show_map("db.json")
-    return static_response("map1.html")
+# @app.get("/map")
+# async def _():
+#     show_map("db.json")
+#     return static_response("map1.html")

@@ -1,4 +1,4 @@
-from db_points import drop_table, create_table
+from db import drop_table, create_table
 
 
 def prepare_db():

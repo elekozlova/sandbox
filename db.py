@@ -35,23 +35,55 @@ def execute_sql(sql: str) -> List[tuple]:
     return rows
 
 
-def get_coords(city: str) -> Optional[tuple]:
+# def get_coords(city: str) -> Optional[tuple]:
+#     sql = f"""
+#         SELECT lat,lon FROM points
+#         WHERE address = '{city}'
+#         ;
+#     """
+#     r = execute_sql(sql)
+#     try:
+#         coords = r[0]
+#     except IndexError:
+#         return None
+#     return coords
+
+def get_latlon() -> Optional[tuple]:
     sql = f"""
-        SELECT lat,lon FROM points
-        WHERE address = '{city}'
-        ;
+        SELECT lat,lon FROM points;
     """
     r = execute_sql(sql)
     try:
-        coords = r[0]
+        coords = r
     except IndexError:
         return None
     return coords
 
+def clear():
+    sql = f"""
+        DELETE FROM points;
+    """
+    execute_sql(sql)
 
-def city_exists(city: str) -> bool:
-    coords = get_coords(city)
-    return coords is not None
+
+
+
+
+def get_list_cities():
+    sql = f"""
+        SELECT address FROM points;
+    """
+    r = execute_sql(sql)
+    result = []
+    for row in r:
+        result.append(row[0])
+    return result
+
+
+
+# def city_exists(city: str) -> bool:
+#     coords = get_coords(city)
+#     return coords is not None
 
 
 def insert_new_point(city: str, lat: int, lon: int) -> None:
@@ -64,10 +96,10 @@ def insert_new_point(city: str, lat: int, lon: int) -> None:
 
 
 def save_point(city: str, lat: int, lon: int) -> None:
-    if city_exists(city):
-        get_coords(city)
-    else:
-        insert_new_point(city, lat, lon)
+    # if city_exists(city):
+    #     get_coords(city)
+    # else:
+    insert_new_point(city, lat, lon)
 
 
 def create_table() -> None:
@@ -89,3 +121,5 @@ def drop_table() -> None:
         """
 
     execute_sql(sql)
+
+print(get_list_cities())
