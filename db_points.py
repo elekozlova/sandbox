@@ -18,8 +18,6 @@ user = url.username
 dsn = f"{user=} {password=} {host=} {dbname=}"
 
 
-
-
 def execute_sql(sql: str) -> List[tuple]:
     rows = []
     with closing(psycopg2.connect(dsn)) as connection:
@@ -72,10 +70,11 @@ def save_point(city: str, lat: int, lon: int) -> None:
         insert_new_point(city, lat, lon)
 
 
-def create_tables() -> None:
+def create_table() -> None:
     sql = """
         CREATE TABLE IF NOT EXISTS points(
-            address TEXT NOT NULL UNIQUE,
+            id serial PRIMARY KEY,
+            address TEXT,
             lat FLOAT NOT NULL DEFAULT 0, 
             lon FLOAT NOT NULL DEFAULT 0
         );
@@ -84,7 +83,7 @@ def create_tables() -> None:
     execute_sql(sql)
 
 
-def drop_tables() -> None:
+def drop_table() -> None:
     sql = """
             DROP TABLE IF EXISTS points CASCADE;
         """

@@ -1,9 +1,9 @@
-from db_points import drop_tables, create_tables
+from db_points import drop_table, create_table
 
 
 def prepare_db():
-    drop_tables()
-    create_tables()
+    drop_table()
+    create_table()
     print("db is prepared")
 
 
