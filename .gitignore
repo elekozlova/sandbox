@@ -1,5 +1,4 @@
 .idea
-db.json
 .venv/
 **/__pycache__
 .vscode/

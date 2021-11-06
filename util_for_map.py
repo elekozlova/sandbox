@@ -1,27 +1,46 @@
 import folium
+from typing import List
+
+from db import get_list_cities, get_latlon
 
 
-def get_pair_location(list_cities):
-    arrs = get_latlong(list_cities)
+def get_pair_cities(lst: List):
+    pair_cities = []
+    for p, c in zip(lst, lst[1:]):
+        r = p, c
+        pair_cities.append(r)
+    return pair_cities
+
+
+def get_pair_location(lst: List):
     new_list = []
-    for p, c in zip(arrs, arrs[1:]):
+    for p, c in zip(lst, lst[1:]):
         r = p, c
         new_list.append(r)
     return new_list
 
 
-def show_map(file):
-    cities = get_list_cities(file)
+def show_map():
+    cities = get_list_cities()
+    lat_longs = get_latlon()
+    if len(lat_longs) != 0:
+        map_ = folium.Map(location=lat_longs[0], zoom_start=10, tiles='OpenStreetMap')
+        for coordinates in lat_longs:
+            folium.Marker(location=coordinates, tooltip="Click here for more",
+                          icon=folium.Icon(icon="map-pin", prefix='fa')).add_to(map_)
 
-    lat_longs = get_latlong(cities)
-    map = folium.Map(location=lat_longs[0], zoom_start = 8, tiles='OpenStreetMap')
-    for coordinates in lat_longs:
-        folium.Marker(location=coordinates, tooltip="Click here for more", icon=folium.Icon(icon="map-pin", prefix='fa')).add_to(map)
+        pair_location = get_pair_location(lat_longs)
 
-    pair_location = get_pair_location(cities)
-    for pair in pair_location:
-        line = folium.PolyLine(locations=pair, weight=1, color='blue')
-        map.add_child(line)
-        map.save("map1.html")
+        for pair in pair_location:
+            line = folium.PolyLine(locations=pair, weight=2, color='blue')
+            map_.add_child(line)
+        map_.save("map1.html")
+    else:
+        map_ = folium.Map(location=(53.9000000, 27.5666700), zoom_start=10, tiles='OpenStreetMap')
+        folium.Marker(location=(53.9000000, 27.5666700),
+                      icon=folium.Icon(icon="map-pin", prefix='fa')).add_to(map_)
+        map_.save("map1.html")
 
     return "map1.html"
+
+

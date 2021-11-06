@@ -35,43 +35,26 @@ def execute_sql(sql: str) -> List[tuple]:
     return rows
 
 
-# def get_coords(city: str) -> Optional[tuple]:
-#     sql = f"""
-#         SELECT lat,lon FROM points
-#         WHERE address = '{city}'
-#         ;
-#     """
-#     r = execute_sql(sql)
-#     try:
-#         coords = r[0]
-#     except IndexError:
-#         return None
-#     return coords
-
 def get_latlon() -> Optional[tuple]:
     sql = f"""
-        SELECT lat,lon FROM points;
+        SELECT lat,lon FROM points order by id;
     """
-    r = execute_sql(sql)
-    try:
-        coords = r
-    except IndexError:
-        return None
-    return coords
 
-def clear():
+    result = execute_sql(sql)
+    return result
+
+
+def clear_table():
     sql = f"""
-        DELETE FROM points;
+        TRUNCATE points restart identity;
     """
+
     execute_sql(sql)
-
-
-
 
 
 def get_list_cities():
     sql = f"""
-        SELECT address FROM points;
+        SELECT address FROM points order by id;
     """
     r = execute_sql(sql)
     result = []
@@ -80,26 +63,23 @@ def get_list_cities():
     return result
 
 
+def cities_rows():
+    sql = f"""
+        SELECT id, address FROM points order by id;
+    """
+    result = execute_sql(sql)
+    return result
 
-# def city_exists(city: str) -> bool:
-#     coords = get_coords(city)
-#     return coords is not None
 
-
-def insert_new_point(city: str, lat: int, lon: int) -> None:
+def insert_new_point(city: str, lat: float, lon: float):
     sql = f"""
         INSERT INTO points(address, lat, lon)
         VALUES ('{city}', {lat}, {lon} )
+        RETURNING id, lat, lon
         ;
     """
-    execute_sql(sql)
-
-
-def save_point(city: str, lat: int, lon: int) -> None:
-    # if city_exists(city):
-    #     get_coords(city)
-    # else:
-    insert_new_point(city, lat, lon)
+    result = execute_sql(sql)
+    return result
 
 
 def create_table() -> None:
@@ -122,4 +102,13 @@ def drop_table() -> None:
 
     execute_sql(sql)
 
-print(get_list_cities())
+
+def swap_id(id1: int, id2: int):
+    sql = f"""
+    BEGIN;
+        UPDATE points SET id = -1 WHERE id = {id1};
+        UPDATE points SET id = {id1} where id = {id2};
+        UPDATE points SET id = {id2} where id = -1;
+    COMMIT; """
+
+    execute_sql(sql)

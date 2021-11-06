@@ -1,19 +1,22 @@
 ## Functionalities
-- [x] Calculate and visualize the distance between the current location and the destination.
+- [x] Calculate and visualize the distance and the time between the current location and the destination.
 
 ## Installation steps
 
-Clone the Repo and install the requirements
+Clone the Repo 
 
 ```
 git clone https://github.com/elekozlova/sandbox.git
-cd sandbox
-pip install -r requirements.txt
+
 ```
 ### 
- - create .env file
- - add in .env file information about your DATA BASE.Example:DATABASE_URL = "postgresql://user:password@localhost:port/name_base"
- - run the application for create table
+- install the packages from requirements.txt
+- create .env file
+- add in .env file information about your DATA BASE.
+
+Example: DATABASE_URL = "postgresql://user:password@localhost:port/name_base"
+
+- run the application for create table
 ```
 python release.py 
 ```
