@@ -11,10 +11,6 @@ def get_coords(city: str) -> Tuple[float, float]:
     result = geolocator.geocode(city)
     return result.latitude, result.longitude
 
-print(get_coords("London"))
-print(get_coords("Minsk"))
-
-
 
 def create_city(city: str) -> int:
     """creates a city record with coords, returning id, lat, lon"""
@@ -26,13 +22,14 @@ def create_city(city: str) -> int:
 
 def calculate_distance(location_a, location_b: Tuple[float, float]) -> int:
     """
-    :param location_a:
-    :param location_b:
+    :param location_a: lat and lon of the first  city
+    :param location_b: lat and lon of the second  city
     :return: distance between two cities in km """
 
     city_a = (location_a[0], location_a[1])
     city_b = (location_b[0], location_b[1])
-    return round((distance.distance(city_a, city_b).km), 2)
+
+    return round(distance.distance(city_a, city_b).km, 2)
 
 
 def get_route():
