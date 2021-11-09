@@ -1,5 +1,5 @@
-from fastapi import FastAPI, Body, Response
-from util import create_city,  get_route
+from fastapi import FastAPI, Response
+from util import add_city,  get_route
 from db import clear_table, swap_id
 from static import apply_cache_headers, static_response
 from models import City, SwapInfo
@@ -29,14 +29,14 @@ async def _(response: Response):
     return static_response("index.js")
 
 
-@app.post("/create_city", description="send city as a string")
+@app.post("/add_city", description="send city as a string")
 async def _(city: City):
-    city.id = create_city(city.name)
+    city.id = add_city(city.name)
 
     return city
 
 
-@app.get("/result", description="get all route, km, time and paths of the all route")
+@app.get("/get_route", description="get all route, km, time and paths of the all route")
 async def _():
     result = get_route()
 

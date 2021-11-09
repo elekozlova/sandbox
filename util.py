@@ -4,6 +4,8 @@ import db
 from models import City, Vector, DistanceAndTime, Route
 from typing import Tuple
 
+SPEED: int = 70
+
 
 def get_coords(city: str) -> Tuple[float, float]:
     """Nominatim - geoservice provides coordinates (latitude, longitude) """
@@ -12,7 +14,7 @@ def get_coords(city: str) -> Tuple[float, float]:
     return result.latitude, result.longitude
 
 
-def create_city(city: str) -> int:
+def add_city(city: str) -> int:
     """creates a city record with coords, returning id, lat, lon"""
     lat_long = get_coords(city)
     id_ = db.insert_new_point(city, *lat_long)
@@ -42,40 +44,29 @@ def get_route():
         )
     for row in list_cities
     ]
-    # Show the cities of departure and arrival
 
-    pairs = zip(cities, cities[1:])
-
+    pairs_cities = zip(cities, cities[1:])
 
     list_latlong = db.get_latlon()
+
     distance = [calculate_distance(*pair) for pair in zip(list_latlong[1:], list_latlong)]
 
-    SPEED: int = 70
     time = list(map(lambda x: round((x / SPEED), 2), distance))
 
-    items = list(map(list, zip(distance, time)))
-
-    distance_time = [
-        DistanceAndTime(
-            km=item[0],
-            hours=item[1],
-        )
-        for item in items
-    ]
-    #Show distances and times between cities of departure and arrival
+    path_details = list(map(list, zip(pairs_cities, distance, time)))
 
     vectors = [
         Vector(
-            from_=pair[0],
-            to=pair[1],
-            dt=distance_time[0],
+            from_=item[0][0],
+            to=item[0][1],
+            dt=DistanceAndTime(km=item[1], hours=item[2])
         )
-        for pair in pairs
+        for item in path_details
     ]
 
     total = DistanceAndTime(
-        hours=sum(time),
         km=sum(distance),
+        hours=sum(time),
     )
     # Show distance and time the whole route
 

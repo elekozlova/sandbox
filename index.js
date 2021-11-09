@@ -1,5 +1,8 @@
-const CREATE_URL = '/create_city';
-const CREATE_URL = '/result';
+const ADD_URL = '/add_city';
+const GET_URL = '/get_route';
+const SWAP_URL = '/swap';
+const DEL_URL = '/del';
+
 
 
 async function api_call(url, args) {
