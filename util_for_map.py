@@ -26,7 +26,7 @@ def show_map():
     if len(lat_longs) != 0:
         map_ = folium.Map(location=lat_longs[0], zoom_start=10, tiles='OpenStreetMap')
         for coordinates in lat_longs:
-            folium.Marker(location=coordinates, tooltip="Click here for more",
+            folium.Marker(location=coordinates,  tooltip="Click here for more",
                           icon=folium.Icon(icon="map-pin", prefix='fa')).add_to(map_)
 
         pair_location = get_pair_location(lat_longs)

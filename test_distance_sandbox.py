@@ -7,8 +7,8 @@ import httpx
 """Second way testing """
 
 
-url_create_city = "http://localhost:8000/create_city"
-url_result = "http://localhost:8000/result"
+url_add_city = "http://localhost:8000/add_city"
+url_get_route = "http://localhost:8000/get_route"
 url_map = "http://localhost:8000/map"
 url_del = "http://localhost:8000/del"
 url_swap = "http://localhost:8000/swap"
@@ -21,26 +21,26 @@ add_city4 = {"name": "Milan"}
 change = {"id1": 1, "id2": 2}
 
 
-r = httpx.post(url_create_city, json=add_city1)
+r = httpx.post(url_add_city, json=add_city1)
 print(r)
-r1 = httpx.post(url_create_city, json=add_city2)
+r1 = httpx.post(url_add_city, json=add_city2)
 print(r1)
-r2 = httpx.post(url_create_city, json=add_city3)
+r2 = httpx.post(url_add_city, json=add_city3)
 print(r2)
-r3 = httpx.post(url_create_city, json=add_city4)
+r3 = httpx.post(url_add_city, json=add_city4)
 print(r3)
-r4 = httpx.get(url_result)
-print(r4)
-print(r4.json())
-
-show_map = httpx.get(url_map)
-
-r5 = httpx.delete(url_del)
-print(r5)
-
-change = httpx.post(url_swap, json=change)
-print(change)
-print(change.json())
+# r4 = httpx.get(url_result)
+# print(r4)
+# print(r4.json())
+#
+# show_map = httpx.get(url_map)
+#
+# r5 = httpx.delete(url_del)
+# print(r5)
+#
+# change = httpx.post(url_swap, json=change)
+# print(change)
+# print(change.json())
 
 
 

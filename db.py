@@ -4,11 +4,12 @@ from contextlib import closing
 from typing import List
 from typing import Optional
 import psycopg2
-from dotenv import load_dotenv, find_dotenv
+from dotenv import load_dotenv
 import urllib.parse as urlparse
+import psycopg2.extras
 
 
-load_dotenv(find_dotenv())
+load_dotenv()
 
 url = urlparse.urlparse(os.environ["DATABASE_URL"])
 dbname = url.path[1:]
@@ -28,11 +29,11 @@ def execute_sql(sql: str) -> List[tuple]:
             try:
                 if cursor.rowcount:
                     rows = cursor.fetchall()
-
             except psycopg2.ProgrammingError:
-                return None
+                None
 
     return rows
+
 
 
 def get_latlon() -> Optional[tuple]:
@@ -42,6 +43,7 @@ def get_latlon() -> Optional[tuple]:
 
     result = execute_sql(sql)
     return result
+
 
 
 def clear_table():

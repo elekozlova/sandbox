@@ -1,43 +1,129 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
 body {
+  min-height: 100%;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  height: 100vh;
+  background-color: #0093E9;
+  background-attachment: fixed;
   font-family: sans-serif;
+}
+
+.wrapper {
+  display: flex;  
+  height: 100%;
+  align-items: stretch;
+  justify-content: stretch;
 }
 
 .container {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin: 80px;
-  padding: 25px;
-  width: 400px;
-  background: #ffeeee;
+  margin: 0;
+  padding: 25px 25px 10px;
+  height: 100%;
+  width: 30%;
+  min-width: 300px;
+  max-width: 600px;
+  background: #f5f0e1;
+  -webkit-box-shadow: 14px 5px 53px 8px rgba(34, 60, 80, 0.5);
+  -moz-box-shadow: 14px 5px 53px 8px rgba(34, 60, 80, 0.4);
+  box-shadow: 14px 5px 53px 8px rgba(34, 60, 80, 0.4);
 }
 
 .description {
-font-size: 16px;
-margin-bottom: 20px;
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 30px;
 }
 
 .point-block {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   margin-bottom: 20px;
 }
 
 .point-block label {
-  display: block;
+  padding-right: 10px;
+}
+
+.point-block input {
+  min-height: 20px;
+  padding: 8px 12px;
+  max-width: 90%;
+  font-size: 16px;
+}
+
+.controller {
+  display: flex;
+  align-items: center;
+  max-width: 90%
 }
 
 button {
-  max-width: 200px;
-  min-height: 40px;
+  width: 100%;
   color: #fff;
-  background: #7d2717;
-  padding: 15px;
-  margin: 15px 0;
+  background-color: #1e3d59;
+  transition: all 0.3s ease;
+  border-color: transparent;
+  cursor: pointer;
+  box-shadow: none;
 }
 
-#result {
+button:not(:disabled):hover {
+  color: #1e3d59;
+  background-color: #fff;
+  border-color: #1e3d59;
+}
+
+button:disabled,
+button[disabled]{
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+  cursor: default;
+}
+
+.submit {
+  margin: 15px 0;
+  padding: 15px;
+  font-size: 18px;
+}
+
+.opener {
+  margin: 9px 0;
+  padding: 9px 15px;
+  font-size: 16px;
+}
+
+.closer {
+  margin-left: 5px;
+  padding: 5px;
+}
+
+#result:not(:empty) {
   display: block;
-  padding: 10px 4px;
+  padding: 10px;
   margin-top: 20px;
   font-size: 18px;
-  border: 1px solid #7d2717;
-}}
+  border: 1px solid #1e3d59;
+}
+
+.map {
+  flex-grow: 1;
+}
+
+iframe {
+  border: none;
+  box-shadow: none;
+}
