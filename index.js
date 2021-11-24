@@ -12,20 +12,29 @@ async function api_call (url, args) {
     const headers = new Headers();
   
     headers.set("content-type", "application/json");
-  
-    const resp = await fetch(
-        url, {
-            body: JSON.stringify(args.json),
-            method: args.method || 'POST',
-            headers: headers,
+
+    fetchArgs = {
+      method: "GET",
+      headers: headers,
+      body: null,
+    }
+
+    if (args){
+      if (args.method) {
+        fetchArgs.method = args.method;
+        if (args.method != "GET" && args.json){
+          fetchArgs.body = JSON.stringify(args.json);
         }
-    );
+      }
+    }
+  
+    const resp = await fetch(url, fetchArgs);
 
     if (resp.status !== 200) {
         return null;
     }
 
-    return await resp.json();
+    return resp.json();
 }
 
 /**
@@ -33,10 +42,25 @@ async function api_call (url, args) {
 * @return {object}
 */
 async function create_city (city) {
-    const payload = await api_call(CREATE_URL, {json: city});
+    const payload = await api_call(
+      ADD_URL, {
+        json: {name:city},
+        method: "POST",
+      });
   
     return payload;
 }
+
+
+/**
+* @return {object}
+*/
+async function get_distance() {
+  const payload = await api_call(GET_URL);
+
+  return payload;
+}
+
 
 /**
 * @return {void}
@@ -53,23 +77,26 @@ async function setUpMy_app() {
             destString = '',
             result;
       
-        inputs = document.querySelectorAll('#points-fields input');
+        // TODO: delete all cities
 
-        inputs.forEach(input => {
+        inputs = document.querySelectorAll('#points-fields input');
+        
+        for (let input of inputs) {
           if (!input.value) {
             error = true;
             alert(`Не хватает данных в поле ${input.dataset.field}!`);
           } else {
             points[input.name] = input.value;
             values.push(input.value);
+            await create_city(input.value);
           }
-        });
+        }
       
         if (!error) {
           destString = values.join(' and ');
           result = await get_distance(points);
-
-          resultSpan.textContent = `Distance between ${destString}: ${result} km`;
+          let result_ = JSON.stringify(result);
+          resultSpan.textContent = `Distance between ${destString}: ${result_} km`;
        }
     })
 }
