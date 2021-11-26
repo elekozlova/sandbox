@@ -2,36 +2,36 @@
 <html>
 
 <head>
-	<title>My_Navigator</title>
-	<link rel="stylesheet" href="/style">
-	<meta charset="UTF-8">
+    <title>My_Navigator</title>
+    <link href="/style" rel="stylesheet">
+    <meta charset="UTF-8">
 </head>
 <body>
 <div class="wrapper">
     <div class="container">
-      <div class="main-content">
-              <h2>Navigator</h2>
-        <span class="description">How far is your destination?</span>
-        <div class="fields" id="points-fields">
-          <div class="point-block point1-wrapper">
-            <label for="point1">Point 1:</label>
-            <input id="point1" name="point1" type="text" data-field=1 value="London"/>
-          </div>
-          <div class="point-block point2-wrapper">
-            <label for="point2">Point 2:</label>
-            <input id="point2" name="point2" type="text" data-field=2 value="Minsk"/>
-          </div>
+        <div class="main-content">
+            <h2>Navigator</h2>
+            <span class="description">How far is your destination?</span>
+            <div class="fields" id="points-fields">
+                <div class="point-block point1-wrapper">
+                    <label for="point1">Point 1:</label>
+                    <input data-field=1 id="point1" name="point1" type="text" value="London"/>
+                </div>
+                <div class="point-block point2-wrapper">
+                    <label for="point2">Point 2:</label>
+                    <input data-field=2 id="point2" name="point2" type="text" value="Minsk"/>
+                </div>
+            </div>
         </div>
-</div>
-      <div class="footer-content">
-        <p class="result" id="result"></p>
-        <button type="button" class="opener" id="field-opener">Show additional field</button>
-        <button type="submit" class="submit" id="navigator-submit">Get Result</button>
-      </div>
+        <div class="footer-content">
+            <p class="result" id="result"></p>
+            <button class="opener" id="field-opener" type="button">Show additional field</button>
+            <button class="submit" id="navigator-submit" type="submit">Get Result</button>
+        </div>
     </div>
 
     <div class="map">
-      <iframe src="/map" width="100%" height="100%"></iframe>
+        <iframe height="100%" src="/map" width="100%"></iframe>
     </div>
 </div>
 <script defer src="/js"></script>
