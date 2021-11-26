@@ -1,129 +1,129 @@
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 html,
 body {
-  min-height: 100%;
+    min-height: 100%;
 }
 
 body {
-  padding: 0;
-  margin: 0;
-  height: 100vh;
-  background-color: #0093E9;
-  background-attachment: fixed;
-  font-family: sans-serif;
+    background-attachment: fixed;
+    background-color: #0093e9;
+    font-family: sans-serif;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
 }
 
 .wrapper {
-  display: flex;  
-  height: 100%;
-  align-items: stretch;
-  justify-content: stretch;
+    align-items: stretch;
+    display: flex;
+    height: 100%;
+    justify-content: stretch;
 }
 
 .container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  margin: 0;
-  padding: 25px 25px 10px;
-  height: 100%;
-  width: 30%;
-  min-width: 300px;
-  max-width: 600px;
-  background: #f5f0e1;
-  -webkit-box-shadow: 14px 5px 53px 8px rgba(34, 60, 80, 0.5);
-  -moz-box-shadow: 14px 5px 53px 8px rgba(34, 60, 80, 0.4);
-  box-shadow: 14px 5px 53px 8px rgba(34, 60, 80, 0.4);
+    background: #f5f0e1;
+    -moz-box-shadow: 14px 5px 53px 8px rgba(34, 60, 80, 0.4);
+    -webkit-box-shadow: 14px 5px 53px 8px rgba(34, 60, 80, 0.5);
+    box-shadow: 14px 5px 53px 8px rgba(34, 60, 80, 0.4);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+    margin: 0;
+    max-width: 600px;
+    min-width: 300px;
+    padding: 25px 25px 10px;
+    width: 30%;
 }
 
 .description {
-  display: inline-block;
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 30px;
+    display: inline-block;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 30px;
 }
 
 .point-block {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  margin-bottom: 20px;
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
 }
 
 .point-block label {
-  padding-right: 10px;
+    padding-right: 10px;
 }
 
 .point-block input {
-  min-height: 20px;
-  padding: 8px 12px;
-  max-width: 90%;
-  font-size: 16px;
+    font-size: 16px;
+    max-width: 90%;
+    min-height: 20px;
+    padding: 8px 12px;
 }
 
 .controller {
-  display: flex;
-  align-items: center;
-  max-width: 90%
+    align-items: center;
+    display: flex;
+    max-width: 90%
 }
 
 button {
-  width: 100%;
-  color: #fff;
-  background-color: #1e3d59;
-  transition: all 0.3s ease;
-  border-color: transparent;
-  cursor: pointer;
-  box-shadow: none;
+    background-color: #1e3d59;
+    border-color: transparent;
+    box-shadow: none;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
 }
 
 button:not(:disabled):hover {
-  color: #1e3d59;
-  background-color: #fff;
-  border-color: #1e3d59;
+    background-color: #ffffff;
+    border-color: #1e3d59;
+    color: #1e3d59;
 }
 
 button:disabled,
-button[disabled]{
-  border: 1px solid #999999;
-  background-color: #cccccc;
-  color: #666666;
-  cursor: default;
+button[disabled] {
+    background-color: #cccccc;
+    border: 1px solid #999999;
+    color: #666666;
+    cursor: default;
 }
 
 .submit {
-  margin: 15px 0;
-  padding: 15px;
-  font-size: 18px;
+    font-size: 18px;
+    margin: 15px 0;
+    padding: 15px;
 }
 
 .opener {
-  margin: 9px 0;
-  padding: 9px 15px;
-  font-size: 16px;
+    font-size: 16px;
+    margin: 9px 0;
+    padding: 9px 15px;
 }
 
 .closer {
-  margin-left: 5px;
-  padding: 5px;
+    margin-left: 5px;
+    padding: 5px;
 }
 
 #result:not(:empty) {
-  display: block;
-  padding: 10px;
-  margin-top: 20px;
-  font-size: 18px;
-  border: 1px solid #1e3d59;
+    border: 1px solid #1e3d59;
+    display: block;
+    font-size: 18px;
+    margin-top: 20px;
+    padding: 10px;
 }
 
 .map {
-  flex-grow: 1;
+    flex-grow: 1;
 }
 
 iframe {
-  border: none;
-  box-shadow: none;
+    border: none;
+    box-shadow: none;
 }
