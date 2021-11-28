@@ -69,7 +69,7 @@ def get_route():
     ]
 
     total = DistanceAndTime(
-        km=sum(distance),
+        km=round(sum(distance), 2),
         hours=round(sum(time), 2)
     )
 
