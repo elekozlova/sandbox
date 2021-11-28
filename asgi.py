@@ -43,7 +43,7 @@ async def _():
     return result
 
 
-@app.delete("/del", status_code=204)
+@app.delete("/del", status_code=204, description="clear the way")
 async def _():
     clear_table()
 
