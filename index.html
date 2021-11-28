@@ -1,38 +1,38 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>My_Navigator</title>
+    <title>My Navigator</title>
     <link href="/style" rel="stylesheet">
     <meta charset="UTF-8">
 </head>
+
 <body>
+
 <div class="wrapper">
     <div class="container">
         <div class="main-content">
             <h2>Navigator</h2>
-            <span class="description">How far is your destination?</span>
-            <div class="fields" id="points-fields">
-                <div class="point-block point1-wrapper">
-                    <label for="point1">Point 1:</label>
-                    <input data-field=1 id="point1" name="point1" type="text" value="London"/>
-                </div>
-                <div class="point-block point2-wrapper">
-                    <label for="point2">Point 2:</label>
-                    <input data-field=2 id="point2" name="point2" type="text" value="Minsk"/>
-                </div>
+            <div class="fields" id="id-route">
             </div>
-        </div>
-        <div class="footer-content">
-            <p class="result" id="result"></p>
-            <button class="opener" id="field-opener" type="button">Show additional field</button>
-            <button class="submit" id="navigator-submit" type="submit">Get Result</button>
+            <div>
+                <hr>
+            </div>
+            <div class="controls">
+                <label for="id-city">New city:</label>
+                <input id="id-city" name="city" placeholder="type city name here" type="text" value="">
+                <button class="btn-add" id="id-add">Add</button>
+                <button class="btn-reset" id="id-reset">Reset route</button>
+            </div>
         </div>
     </div>
 
-    <div class="map">
-        <iframe height="100%" src="/map" width="100%"></iframe>
-    </div>
+    <!--    <div class="map">-->
+    <!--        <iframe height="100%" src="/map" width="100%"></iframe>-->
+    <!--    </div>-->
 </div>
+
 <script defer src="/js"></script>
+
+</body>
 </html>

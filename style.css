@@ -2,16 +2,15 @@
     box-sizing: border-box;
 }
 
-html,
-body {
-    min-height: 100%;
+html, body {
+    height: 100%;
+    min-height: 600px;
 }
 
 body {
     background-attachment: fixed;
     background-color: #0093e9;
     font-family: sans-serif;
-    height: 100vh;
     margin: 0;
     padding: 0;
 }
@@ -30,7 +29,6 @@ body {
     box-shadow: 14px 5px 53px 8px rgba(34, 60, 80, 0.4);
     display: flex;
     flex-direction: column;
-    height: 100%;
     justify-content: space-between;
     margin: 0;
     max-width: 600px;
@@ -67,7 +65,6 @@ body {
 .controller {
     align-items: center;
     display: flex;
-    max-width: 90%
 }
 
 button {
@@ -126,4 +123,38 @@ button[disabled] {
 iframe {
     border: none;
     box-shadow: none;
+}
+
+
+.fields p {
+    border-left: 1px black solid;
+    padding-left: 10px;
+}
+
+.controls {
+    display: grid;
+    grid-column-gap: 4px;
+    grid-row-gap: 4px;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+}
+
+.controls label {
+    grid-column: 1/5;
+    grid-row: 1/2;
+}
+
+.controls input {
+    grid-column: 1/4;
+    grid-row: 2/3;
+}
+
+.controls .btn-add {
+    grid-column: 4/5;
+    grid-row: 2/3;
+}
+
+.controls .btn-reset {
+    grid-column: 1/5;
+    grid-row: 3/4;
 }

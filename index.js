@@ -1,19 +1,143 @@
-const ADD_URL = '/add_city';
-const GET_URL = '/get_route';
-const SWAP_URL = '/swap';
-const DEL_URL = '/del';
+document.addEventListener("DOMContentLoaded", doSetUp);
 
-/**
- * @param {string} url
- * @param {object} args
- * @return {json}
- */
-async function api_call(url, args) {
+
+let buttonAdd = null;
+let buttonReset = null;
+let inputCity = null;
+let routeContainer = null;
+let timer1 = null;
+let timer2 = null;
+
+
+// === LEVEL 0 - "Root" ===
+
+
+async function doSetUp() {
+    await doSetUpPageElements();
+    await doSetUpTimers();
+    await doPopulateRouteLocalStorage();
+    await doPopulateRouteContainer();
+}
+
+
+// === LEVEL 1  ===
+
+
+async function doSetUpPageElements() {
+    buttonAdd = document.getElementById("id-add");
+    buttonAdd.addEventListener("click", doAddCity);
+
+    buttonReset = document.getElementById("id-reset");
+    buttonReset.addEventListener("click", doResetPath);
+
+    inputCity = document.getElementById("id-city");
+    inputCity.addEventListener("keyup", async function (event) {
+        if (event.code === "Enter" && event.key === "Enter") {
+            event.preventDefault();
+            await doAddCity();
+        }
+    });
+
+    routeContainer = document.getElementById("id-route");
+}
+
+
+async function doSetUpTimers() {
+    timer1 = setInterval(doPopulateRouteLocalStorage, 4000);
+    timer2 = setInterval(doPopulateRouteContainer, 4000);
+}
+
+
+// === LEVEL 2  ===
+
+
+async function doAddCity() {
+    const city_name = inputCity.value;
+    inputCity.value = "";
+
+    await apiAddCity(city_name);
+    await doPopulateRouteLocalStorage();
+    await doPopulateRouteContainer();
+}
+
+
+async function doResetPath() {
+    await apiResetPath();
+    localStorage.removeItem("route");
+    await doPopulateRouteContainer();
+}
+
+
+async function doPopulateRouteLocalStorage() {
+    const route = await apiGetRoute();
+    localStorage.setItem("route", JSON.stringify(route));
+}
+
+
+async function doPopulateRouteContainer() {
+    while (routeContainer.firstChild) {
+        routeContainer.removeChild(routeContainer.firstChild);
+    }
+
+    const route = JSON.parse(localStorage.getItem("route") || "{}");
+    if (!route.path || !route.total) {
+        console.error(`invalid route: ${JSON.stringify(route)}`);
+        return;
+    }
+
+    for (const [index, vector] of route.path.entries()) {
+        if (index === 0) {
+            let hFrom = document.createElement("h3");
+            hFrom.innerText = `🌇 ${vector.from_.name}`;
+            hFrom.cityId = `${vector.from_.id}`;
+            routeContainer.appendChild(hFrom);
+        }
+
+        let pPath = document.createElement("p");
+        let sPath = document.createElement("span");
+        sPath.innerText = `✈️ ${vector.dt.km} km — ${vector.dt.hours} hrs`;
+        pPath.appendChild(sPath);
+        routeContainer.appendChild(pPath);
+
+        let hTo = document.createElement("h3");
+        hTo.innerText = `🏙 ${vector.to.name}`;
+        hTo.cityId = `${vector.to.id}`;
+        routeContainer.appendChild(hTo);
+    }
+}
+
+
+// === LEVEL 3  ===
+
+
+async function apiAddCity(city) {
+    return apiCall(
+        "/add_city", {
+            json: {name: city},
+            method: "POST",
+        });
+}
+
+
+async function apiResetPath() {
+    return apiCall("/del", {method: "DELETE"});
+}
+
+
+async function apiGetRoute() {
+    return apiCall("/get_route");
+}
+
+
+// === LEVEL 4 ===
+
+
+async function apiCall(url, args = {}) {
     const headers = new Headers();
 
     headers.set("content-type", "application/json");
 
-    fetchArgs = {
+    const fetchArgs = {
         method: "GET",
         headers: headers,
         body: null,
@@ -22,7 +146,7 @@ async function api_call(url, args) {
     if (args) {
         if (args.method) {
             fetchArgs.method = args.method;
-            if (args.method != "GET" && args.json) {
+            if (args.method !== "GET" && args.json) {
                 fetchArgs.body = JSON.stringify(args.json);
             }
         }
@@ -36,165 +160,3 @@ async function api_call(url, args) {
 
     return resp.json();
 }
-
-/**
- * @param {string} city
- * @return {object}
- */
-async function create_city(city) {
-    const payload = await api_call(
-        ADD_URL, {
-            json: {name: city},
-            method: "POST",
-        });
-
-    return payload;
-}
-
-
-/**
- * @return {object}
- */
-async function get_distance() {
-    const payload = await api_call(GET_URL);
-
-    return payload;
-}
-
-
-/**
- * @return {void}
- */
-async function setUpMy_app() {
-    let button = document.getElementById("navigator-submit");
-    let resultSpan = document.getElementById("result");
-
-    button.addEventListener('click', async function () {
-        let inputs = [],
-            values = [],
-            points = {},
-            error = false,
-            destString = '',
-            result;
-
-        // TODO: delete all cities
-
-        inputs = document.querySelectorAll('#points-fields input');
-
-        for (let input of inputs) {
-            if (!input.value) {
-                error = true;
-                alert(`Не хватает данных в поле ${input.dataset.field}!`);
-            } else {
-                points[input.name] = input.value;
-                values.push(input.value);
-                await create_city(input.value);
-            }
-        }
-
-        if (!error) {
-            destString = values.join(' and ');
-            result = await get_distance(points);
-            let result_ = JSON.stringify(result);
-            resultSpan.textContent = `Distance between ${destString}: ${result_} km`;
-        }
-    })
-}
-
-/**
- * @return {void}
- */
-async function setUp() {
-    await setUpMy_app();
-}
-
-document.addEventListener("DOMContentLoaded", setUp);
-
-
-/**
- * Add/hide additional field by button click
- */
-let fieldsContainer = document.getElementById('points-fields');
-let openFieldButton = document.getElementById('field-opener');
-
-// start number for new fields
-let counter = 3;
-// max number of fields
-let maxFields = 6;
-let getTemplate = function (num) {
-    return `<div class="point-block point${num}-wrapper">
-      <label for="point${num}">Point ${num}:</label>
-      <div class="controller">
-        <input id="point${num}" name="point${num}" type="text" data-field=${num} placeholder="City"/>
-        <button type="button" 
-                class="closer" 
-                data-field=${num}
-                onclick="removeField(this)">X</button>
-      </div>
-    </div>`;
-}
-
-/**
- * Get node with the close-field-button from the last added field
- * @return {node || bool}
- */
-let getLastCloseButton = function () {
-    let closeButtons = document.querySelectorAll('.closer');
-
-    if (closeButtons) {
-        let len = closeButtons.length;
-        return len < 1 ? "" : closeButtons[len - 1];
-    }
-
-    return false;
-}
-
-/**
- * Add field for point, disables close-button form the previosly added field
- * Increase fields-counter
- * @return {void}
- */
-let addField = function () {
-    if (counter <= maxFields) {
-
-        if (getLastCloseButton()) {
-            getLastCloseButton().disabled = true;
-        }
-
-        fieldsContainer.insertAdjacentHTML('beforeend', getTemplate(counter));
-        counter++;
-    }
-
-    if (counter === maxFields + 1) {
-        openFieldButton.disabled = true;
-    }
-}
-
-/**
- * Remove field for point, enable close-button form the previosly added field
- * Decrease fields-counter
- * @return {void}
- */
-let removeField = function (el) {
-    let fieldNumber = el.dataset.field;
-
-    if (counter > fieldNumber) {
-        openFieldButton.disabled = false;
-        counter--;
-    }
-
-    el.closest('.point-block').remove();
-
-    if (getLastCloseButton()) {
-        getLastCloseButton().disabled = false;
-    }
-}
-
-/**
- * Listener for the button for adding new fields
- * @return {void}
- */
-openFieldButton.addEventListener('click', function (e) {
-    e.preventDefault();
-    addField();
-})
