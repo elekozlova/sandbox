@@ -57,6 +57,6 @@ async def _(info: SwapInfo):
 
 @app.get("/map", description="show icons on map")
 async def _():
-    show_map()
+    map_io = show_map()
 
-    return static_response("map1.html")
+    return Response(content=map_io.read(), media_type="text/html")

@@ -3,7 +3,9 @@ document.addEventListener("DOMContentLoaded", doSetUp);
 
 let buttonAdd = null;
 let buttonReset = null;
+let dataSynced = false;
 let inputCity = null;
+let mapContainer = null;
 let routeContainer = null;
 let timer1 = null;
 let timer2 = null;
@@ -16,7 +18,8 @@ async function doSetUp() {
     await doSetUpPageElements();
     await doSetUpTimers();
     await doPopulateRouteLocalStorage();
-    await doPopulateRouteContainer();
+    await doPopulateUI(true);
+    await doRefreshMap(true);
 }
 
 
@@ -38,43 +41,34 @@ async function doSetUpPageElements() {
         }
     });
 
+    mapContainer = document.getElementById("id-map");
+
     routeContainer = document.getElementById("id-route");
 }
 
 
 async function doSetUpTimers() {
     timer1 = setInterval(doPopulateRouteLocalStorage, 4000);
-    timer2 = setInterval(doPopulateRouteContainer, 4000);
-}
-
-
-// === LEVEL 2  ===
-
-
-async function doAddCity() {
-    const city_name = inputCity.value;
-    inputCity.value = "";
-
-    await apiAddCity(city_name);
-    await doPopulateRouteLocalStorage();
-    await doPopulateRouteContainer();
-}
-
-
-async function doResetPath() {
-    await apiResetPath();
-    localStorage.removeItem("route");
-    await doPopulateRouteContainer();
+    timer2 = setInterval(doPopulateUI, 4000);
 }
 
 
 async function doPopulateRouteLocalStorage() {
     const route = await apiGetRoute();
-    localStorage.setItem("route", JSON.stringify(route));
+    const routeStr = JSON.stringify(route);
+
+    const previousRouteStr = localStorage.getItem("route");
+    dataSynced = (previousRouteStr === routeStr);
+
+    localStorage.setItem("route", routeStr);
 }
 
 
-async function doPopulateRouteContainer() {
+async function doPopulateUI(forced = false) {
+    if (!forced && dataSynced) return;
+
+    await doRefreshMap(forced);
+
     while (routeContainer.firstChild) {
         routeContainer.removeChild(routeContainer.firstChild);
     }
@@ -104,6 +98,40 @@ async function doPopulateRouteContainer() {
         hTo.cityId = `${vector.to.id}`;
         routeContainer.appendChild(hTo);
     }
+}
+
+
+async function doRefreshMap(forced = false) {
+    if (!forced && dataSynced) return;
+
+    while (mapContainer.firstChild) {
+        mapContainer.removeChild(mapContainer.firstChild);
+    }
+
+    let mapFrame = document.createElement("iframe");
+    mapFrame.style.width = mapFrame.style.height = "100%";
+    mapFrame.src = "/map";
+    mapContainer.appendChild(mapFrame);
+}
+
+
+// === LEVEL 2  ===
+
+
+async function doAddCity() {
+    const city_name = inputCity.value;
+    inputCity.value = "";
+
+    await apiAddCity(city_name);
+    await doPopulateRouteLocalStorage();
+    await doPopulateUI();
+}
+
+
+async function doResetPath() {
+    await apiResetPath();
+    localStorage.removeItem("route");
+    await doPopulateUI();
 }
 
 
