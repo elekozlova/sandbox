@@ -48,10 +48,9 @@ async def _():
     clear_table()
 
 
-@app.post("/swap", description="swap locations")
+@app.put("/swap", description="swap locations")
 async def _(info: SwapInfo):
     swap_id(info.id1, info.id2)
-
     return {"ok": True}
 
 
