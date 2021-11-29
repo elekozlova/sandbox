@@ -79,6 +79,10 @@ async function doPopulateUI(forced = false) {
         return;
     }
 
+    headingTotals = document.createElement("h4");
+    headingTotals.innerText = `✈️ ${route.total.km} km — ${route.total.hours} hrs`;
+    routeContainer.appendChild(headingTotals);
+
     for (const [index, vector] of route.path.entries()) {
         if (index === 0) {
             let hFrom = document.createElement("h3");
