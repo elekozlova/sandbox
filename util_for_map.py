@@ -1,3 +1,5 @@
+import io
+
 import folium
 from typing import List
 
@@ -20,7 +22,9 @@ def get_pair_location(lst: List):
     return new_list
 
 
-def show_map():
+def show_map() -> io.BytesIO:
+    buffer = io.BytesIO()
+
     cities = get_list_cities()
     lat_longs = get_latlon()
     if len(lat_longs) != 0:
@@ -34,13 +38,13 @@ def show_map():
         for pair in pair_location:
             line = folium.PolyLine(locations=pair, weight=2, color='blue')
             map_.add_child(line)
-        map_.save("map1.html")
+        map_.save(buffer, close_file=False)
     else:
         map_ = folium.Map(location=(53.9000000, 27.5666700), zoom_start=10, tiles='OpenStreetMap')
         folium.Marker(location=(53.9000000, 27.5666700),
                       icon=folium.Icon(icon="map-pin", prefix='fa')).add_to(map_)
-        map_.save("map1.html")
+        map_.save(buffer, close_file=False)
 
-    return "map1.html"
+    buffer.seek(0)
 
-
+    return buffer
