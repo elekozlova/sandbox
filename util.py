@@ -54,7 +54,7 @@ def get_route():
         calculate_distance(*pair) for pair in zip(list_latlong[1:], list_latlong)
     ]
 
-    time = list(map(lambda x: round((x / SPEED), 2), distance))
+    time = list(map(lambda x: round((x / SPEED)), distance))
 
     path_details = list(map(list, zip(pairs_cities, distance, time)))
 
@@ -70,7 +70,7 @@ def get_route():
 
     total = DistanceAndTime(
         km=round(sum(distance), 2),
-        hours=round(sum(time), 2)
+        hours=round(sum(time))
     )
 
     route = Route(
