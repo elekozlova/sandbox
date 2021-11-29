@@ -180,7 +180,7 @@ async function doSwap(city0, city1) {
 
 
 async function apiSwap(id1, id2) {
-    return apiCall("/swap", {json: {id1: id1, id2: id2}, method: "POST"});
+    return apiCall("/swap", {json: {id1: id1, id2: id2}, method: "PUT"});
 }
 
 
